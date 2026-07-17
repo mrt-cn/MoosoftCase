@@ -7,11 +7,7 @@ import { CategoryFilter } from '@/components/product/CategoryFilter';
 import { ProductCard } from '@/components/product/ProductCard';
 import { ProductListSkeleton } from '@/components/product/ProductListSkeleton';
 import { SearchBar } from '@/components/product/SearchBar';
-import {
-  SortChips,
-  type SortDirection,
-  type SortField,
-} from '@/components/product/SortChips';
+import { SortChips, type SortDirection, type SortField } from '@/components/product/SortChips';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ErrorView } from '@/components/ui/ErrorView';
