@@ -9,6 +9,7 @@ import { spacing } from '@/constants/theme';
 import { productSchema, toProductPayload, type ProductFormValues } from '@/lib/validation';
 
 import { CategorySelect } from './CategorySelect';
+import { ThumbnailField } from './ThumbnailField';
 
 interface ProductFormProps {
   mode: 'add' | 'edit';
@@ -127,13 +128,9 @@ export function ProductForm({
           control={control}
           name="thumbnail"
           render={({ field: { value, onChange, onBlur } }) => (
-            <Input
-              label="Görsel URL"
-              placeholder="https://... (opsiyonel)"
-              autoCapitalize="none"
-              keyboardType="url"
+            <ThumbnailField
               value={value ?? ''}
-              onChangeText={onChange}
+              onChange={onChange}
               onBlur={onBlur}
               error={errors.thumbnail?.message}
             />
