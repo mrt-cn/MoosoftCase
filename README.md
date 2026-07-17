@@ -6,6 +6,8 @@ Veri kaynağı olarak [DummyJSON Products API](https://dummyjson.com/docs/produc
 Ürün listeleme, detay, ekleme, düzenleme, silme, arama, kategori filtreleme, sıralama ve
 kalıcı favoriler desteklenir.
 
+![Ürün listesi ekranı](docs/emulator-screenshot.png)
+
 ---
 
 ## İçindekiler
@@ -26,10 +28,15 @@ kalıcı favoriler desteklenir.
 - **Ürün listesi**: görsel, ad, fiyat, kategori ve favori durumu ile.
 - **Ürün detayı**: tam bilgi + düzenle/sil aksiyonları.
 - **Ekle / Düzenle**: tek bir ortak formla, Zod tabanlı doğrulama.
+- **Görsel önizleme**: formda girilen URL ya da seçilen görsel, kare panelde anında önizlenir
+  (geçerlilik doğrudan Zod şemasıyla değerlendirilir).
+- **Galeriden görsel seçme**: cihaz galerisinden görsel seçilir, `documentDirectory` altına
+  kopyalanıp yerel (`file://`) olarak saklanır.
 - **Sil**: onay diyaloğu ile korumalı.
 - **Arama**: isimle, 400 ms debounce'lu.
 - **Kategori filtreleme**: API'den gelen kategorilerle, "Tümü" seçeneği dahil.
-- **Sıralama**: isim (A→Z / Z→A) ve fiyat (artan / azalan); aktif seçim UI'da görünür.
+- **Sıralama**: "İsim" ve "Fiyat" chip'leriyle; aktif chip'e tekrar dokununca yön (▲ artan /
+  ▼ azalan) değişir. Sıralama tamamen client-side yapılır.
 - **Pull-to-Refresh**: veriyi API'den yeniden çeker.
 - **Favoriler**: ayrı ekran, cihazda kalıcı (uygulama yeniden başlatılınca korunur).
 - **Durum yönetimi**: yükleme (skeleton), hata (tekrar dene), boş liste/arama/favori durumları.
@@ -175,6 +182,9 @@ src/
 - **Favoriler yalnızca ID listesi olarak** saklanır ve API'ye gönderilmez (case şartı). Bir ürün
   silinince favorilerden de otomatik düşürülür.
 - **Sıralama ve birleşik filtreleme client-side** yapılır (küçük veri kümesi, gereksiz network yok).
+- **DummyJSON dosya yükleme desteklemez;** galeriden seçilen görseller cihazda
+  `documentDirectory`'de yerel olarak tutulur. Prodüksiyonda görsel bir nesne depolama
+  servisine (örn. S3/Cloudinary) yüklenip dönen URL API'ye yazılmalıdır.
 - **Depolama olarak AsyncStorage** seçildi. Plan aşamasında MMKV düşünülmüştü; ancak MMKV Expo Go'da
   çalışmaz (development build gerektirir). Teslimin birincil şartı "talimatlarla anında çalışabilirlik"
   olduğundan AsyncStorage tercih edildi. Depolama `src/lib/storage.ts` içinde soyutlandığı için
@@ -185,6 +195,8 @@ src/
 ## Bilinen Sınırlamalar
 
 - Ürün başına tek görsel (`thumbnail`) desteklenir; çoklu görsel galerisi yoktur.
+- Galeriden seçilen yerel görseller (`file://`) yalnızca seçildikleri cihazda görünür; başka
+  cihaz veya kurulumda görüntülenmez (yukarıdaki varsayıma bakın).
 - Liste tüm ürünleri tek seferde çeker (~194 kayıt); sonsuz kaydırma (infinite scroll) uygulanmamıştır.
   Veri kümesi küçük olduğu için client-side işlem tercih edilmiştir.
 - DummyJSON simülasyonu gereği, uygulama kapatılıp açıldığında API tarafındaki "gerçek" liste
