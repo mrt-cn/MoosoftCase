@@ -35,8 +35,9 @@ kalıcı favoriler desteklenir.
 - **Sil**: onay diyaloğu ile korumalı.
 - **Arama**: isimle, 400 ms debounce'lu.
 - **Kategori filtreleme**: API'den gelen kategorilerle, "Tümü" seçeneği dahil.
-- **Sıralama**: "İsim" ve "Fiyat" chip'leriyle; aktif chip'e tekrar dokununca yön (▲ artan /
-  ▼ azalan) değişir. Sıralama tamamen client-side yapılır.
+- **Sıralama**: "İsim" ve "Fiyat" chip'leriyle. Pasif chip'e dokununca kriter değişir (varsayılan
+  artan); aktif chip'e tekrar dokununca yön değişir ve etiket açık metinle güncellenir
+  ("İsim: A→Z" ↔ "İsim: Z→A", "Fiyat: Artan" ↔ "Fiyat: Azalan"). Sıralama tamamen client-side yapılır.
 - **Pull-to-Refresh**: veriyi API'den yeniden çeker.
 - **Favoriler**: ayrı ekran, cihazda kalıcı (uygulama yeniden başlatılınca korunur).
 - **Durum yönetimi**: yükleme (skeleton), hata (tekrar dene), boş liste/arama/favori durumları.

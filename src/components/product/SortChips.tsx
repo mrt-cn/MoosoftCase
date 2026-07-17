@@ -16,9 +16,18 @@ const CHIPS: { field: SortField; label: string }[] = [
   { field: 'price', label: 'Fiyat' },
 ];
 
+/** Aktif chip'te yönü açık metinle anlatan etiket. */
+function getActiveLabel(field: SortField, direction: SortDirection): string {
+  if (field === 'name') {
+    return direction === 'asc' ? 'İsim: A→Z' : 'İsim: Z→A';
+  }
+  return direction === 'asc' ? 'Fiyat: Artan' : 'Fiyat: Azalan';
+}
+
 /**
  * Sıralama denetimi: iki chip (İsim / Fiyat).
- * - Aktif chip'e dokunma → yönü çevirir (▲ artan / ▼ azalan).
+ * - Aktif chip'e dokunma → yönü çevirir; etiket açık metinle güncellenir
+ *   (ör. "İsim: A→Z" ↔ "İsim: Z→A", "Fiyat: Artan" ↔ "Fiyat: Azalan").
  * - Pasif chip'e dokunma → kriteri değiştirir, yön varsayılan olarak artan.
  * Sıralamanın kendisi çağıran ekranda client-side yapılır (query key'e girmez).
  */
@@ -35,6 +44,7 @@ export function SortChips({ field, direction, onChange }: SortChipsProps) {
     <View style={styles.row}>
       {CHIPS.map((chip) => {
         const active = chip.field === field;
+        const label = active ? getActiveLabel(chip.field, direction) : chip.label;
         return (
           <Pressable
             key={chip.field}
@@ -43,12 +53,7 @@ export function SortChips({ field, direction, onChange }: SortChipsProps) {
             onPress={() => handlePress(chip.field)}
             style={[styles.chip, active && styles.chipActive]}
           >
-            <Text style={[styles.chipText, active && styles.chipTextActive]}>{chip.label}</Text>
-            {active ? (
-              <Text style={[styles.arrow, styles.chipTextActive]}>
-                {direction === 'asc' ? '▲' : '▼'}
-              </Text>
-            ) : null}
+            <Text style={[styles.chipText, active && styles.chipTextActive]}>{label}</Text>
           </Pressable>
         );
       })}
@@ -84,8 +89,5 @@ const styles = StyleSheet.create({
   chipTextActive: {
     color: colors.textInverse,
     fontWeight: fontWeight.semibold,
-  },
-  arrow: {
-    fontSize: fontSize.xs,
   },
 });
