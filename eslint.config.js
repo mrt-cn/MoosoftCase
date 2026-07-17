@@ -7,7 +7,7 @@ module.exports = defineConfig([
   expoConfig,
   eslintPluginPrettierRecommended,
   {
-    ignores: ['dist/*', 'node_modules/*', '.expo/*', 'android/*', 'ios/*'],
+    ignores: ['dist/*', 'node_modules/*', '.expo/*', 'android/*', 'ios/*', 'expo-env.d.ts'],
   },
   {
     rules: {
