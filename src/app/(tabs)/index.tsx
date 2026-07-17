@@ -7,7 +7,11 @@ import { CategoryFilter } from '@/components/product/CategoryFilter';
 import { ProductCard } from '@/components/product/ProductCard';
 import { ProductListSkeleton } from '@/components/product/ProductListSkeleton';
 import { SearchBar } from '@/components/product/SearchBar';
-import { SortSheet } from '@/components/product/SortSheet';
+import {
+  SortChips,
+  type SortDirection,
+  type SortField,
+} from '@/components/product/SortChips';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { EmptyState } from '@/components/ui/EmptyState';
 import { ErrorView } from '@/components/ui/ErrorView';
@@ -17,7 +21,7 @@ import { useCategories } from '@/hooks/useCategories';
 import { useDebounce } from '@/hooks/useDebounce';
 import { useProductMutations } from '@/hooks/useProductMutations';
 import { useProducts } from '@/hooks/useProducts';
-import { DEFAULT_SORT, getSortLabel, type SortOption } from '@/lib/sort';
+import { type SortOption } from '@/lib/sort';
 
 export default function ProductListScreen() {
   const router = useRouter();
@@ -25,9 +29,12 @@ export default function ProductListScreen() {
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search, 400);
   const [category, setCategory] = useState<string | null>(null);
-  const [sort, setSort] = useState<SortOption>(DEFAULT_SORT);
-  const [sortSheetOpen, setSortSheetOpen] = useState(false);
+  const [sortField, setSortField] = useState<SortField>('name');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
   const [pendingDelete, setPendingDelete] = useState<Product | null>(null);
+
+  // Kriter + yön → sort.ts'in beklediği SortOption ('name-asc' vb.). Client-side, query key'e girmez.
+  const sort: SortOption = `${sortField}-${sortDirection}`;
 
   const { data: categories = [] } = useCategories();
   const { products, isLoading, isError, error, isRefetching, refetch } = useProducts({
@@ -94,14 +101,14 @@ export default function ProductListScreen() {
         <CategoryFilter categories={categories} selected={category} onSelect={setCategory} />
         <View style={styles.toolbar}>
           <Text style={styles.count}>{products.length} ürün</Text>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => setSortSheetOpen(true)}
-            style={({ pressed }) => [styles.sortButton, pressed && styles.pressed]}
-          >
-            <Text style={styles.sortIcon}>↕</Text>
-            <Text style={styles.sortLabel}>{getSortLabel(sort)}</Text>
-          </Pressable>
+          <SortChips
+            field={sortField}
+            direction={sortDirection}
+            onChange={(field, direction) => {
+              setSortField(field);
+              setSortDirection(direction);
+            }}
+          />
         </View>
       </View>
 
@@ -114,13 +121,6 @@ export default function ProductListScreen() {
       >
         <Text style={styles.fabIcon}>＋</Text>
       </Pressable>
-
-      <SortSheet
-        visible={sortSheetOpen}
-        selected={sort}
-        onSelect={setSort}
-        onClose={() => setSortSheetOpen(false)}
-      />
 
       <ConfirmDialog
         visible={pendingDelete !== null}
@@ -161,28 +161,6 @@ const styles = StyleSheet.create({
     fontSize: fontSize.sm,
     color: colors.textMuted,
     fontWeight: fontWeight.medium,
-  },
-  sortButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacing.xs,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
-    borderRadius: radius.pill,
-    backgroundColor: colors.primarySoft,
-  },
-  pressed: {
-    opacity: 0.7,
-  },
-  sortIcon: {
-    fontSize: fontSize.md,
-    color: colors.primaryDark,
-    fontWeight: fontWeight.bold,
-  },
-  sortLabel: {
-    fontSize: fontSize.sm,
-    color: colors.primaryDark,
-    fontWeight: fontWeight.semibold,
   },
   listContent: {
     padding: spacing.lg,
