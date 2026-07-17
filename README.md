@@ -1,4 +1,4 @@
-# Moosoft Menü — Restoran Ürün Yönetimi
+# Moosoft Case
 
 Restoran yöneticilerinin menü ürünlerini yönetebildiği bir React Native (Expo) mobil uygulaması.
 Veri kaynağı olarak [DummyJSON Products API](https://dummyjson.com/docs/products) kullanılır.
