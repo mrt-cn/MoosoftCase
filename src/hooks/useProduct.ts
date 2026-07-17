@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 import { getProduct } from '@/api/products.api';
 import { isLocalId, resolveProduct } from '@/lib/merge';
@@ -13,7 +14,7 @@ import { queryKeys } from './queryKeys';
  */
 export function useProduct(id: number) {
   const isLocal = isLocalId(id);
-  const localChanges = useLocalChangesStore(selectLocalChanges);
+  const localChanges = useLocalChangesStore(useShallow(selectLocalChanges));
 
   const query = useQuery({
     queryKey: queryKeys.products.detail(id),

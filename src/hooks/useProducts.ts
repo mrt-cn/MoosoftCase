@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 import { getProducts, getProductsByCategory, searchProducts } from '@/api/products.api';
 import type { Product } from '@/api/types';
@@ -38,7 +39,7 @@ export function useProducts({ category, search, sort }: UseProductsParams) {
     placeholderData: (previous) => previous,
   });
 
-  const localChanges = useLocalChangesStore(selectLocalChanges);
+  const localChanges = useLocalChangesStore(useShallow(selectLocalChanges));
 
   const products = useMemo(() => {
     const apiList = query.data ?? [];
