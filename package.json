@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web",
+    "start": "cross-env NODE_OPTIONS=--use-system-ca expo start",
+    "android": "cross-env NODE_OPTIONS=--use-system-ca expo start --android",
+    "ios": "cross-env NODE_OPTIONS=--use-system-ca expo start --ios",
+    "web": "cross-env NODE_OPTIONS=--use-system-ca expo start --web",
+    "start:clear": "cross-env NODE_OPTIONS=--use-system-ca expo start --clear",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\"",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@types/react": "~19.2.2",
+    "cross-env": "^10.1.0",
     "eslint": "^9.39.5",
     "eslint-config-expo": "~57.0.0",
     "eslint-config-prettier": "~10.1.8",
