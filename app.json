@@ -29,7 +29,16 @@
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
-    "plugins": ["expo-router", "expo-image"],
+    "plugins": [
+      "expo-router",
+      "expo-image",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Ürün görseli seçebilmek için galeri erişimine izin verin."
+        }
+      ]
+    ],
     "experiments": {
       "typedRoutes": true
     }

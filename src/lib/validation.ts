@@ -9,7 +9,13 @@ export function parseLocaleNumber(value: string): number {
   return Number(normalized);
 }
 
-const URL_REGEX = /^https?:\/\/.+/i;
+const HTTP_URL_REGEX = /^https?:\/\/.+/i;
+// Galeriden seçilen görseller documentDirectory'ye kopyalanır ve file:// ile saklanır.
+const FILE_URI_REGEX = /^file:\/\/.+/i;
+
+function isAllowedImageSource(value: string): boolean {
+  return HTTP_URL_REGEX.test(value) || FILE_URI_REGEX.test(value);
+}
 
 /**
  * Add ve Edit ekranlarının paylaştığı tek form şeması.
@@ -30,13 +36,16 @@ export const productSchema = z.object({
 
   category: z.string().min(1, 'Kategori seçilmelidir'),
 
-  // Görsel URL opsiyonel; ama girildiyse geçerli bir http(s) adresi olmalı.
+  // Görsel opsiyonel; girildiyse ya http(s) URL ya da galeriden seçilmiş file:// olmalı.
   thumbnail: z
     .string()
     .trim()
     .optional()
     .default('')
-    .refine((value) => !value || URL_REGEX.test(value), 'Geçerli bir URL girin (http/https)'),
+    .refine(
+      (value) => !value || isAllowedImageSource(value),
+      'Geçerli bir görsel URL’si girin veya galeriden seçin',
+    ),
 });
 
 export type ProductFormValues = z.input<typeof productSchema>;
